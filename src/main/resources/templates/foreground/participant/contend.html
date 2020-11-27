@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Title</title>
+</head>
+<body>
+<!--<form action="Upload" method="post" enctype="multipart/form-data">-->
+<!--    pid：<input type="text" name="pid" value="${pid }" readonly="readonly"><br>-->
+<!--    姓名：<input type="text" name="pname" value="${student.sname }" readonly="readonly"><br>-->
+<!--    竞选职位：-->
+<!--    <select name="cid" id="cid" id="cadres">-->
+<!--         <option>请选择职位</option>-->
+<!--         <option value="s01">班长</option>-->
+<!--    </select><br>-->
+<form action="upload" method="post" enctype="multipart/form-data">
+    竞选图片：<input type="file" name="partFile" value=""/><br/>
+
+    竞选词：<br/>
+    <!--<textarea name="wordsrc" rows="4" cols="10"> </textarea><br>-->
+    <input type="submit" value="提交"/>
+</form>
+<img th:src="${#servletContext.contextPath}+'/partImgs/软件Java07/039ce6d4-bc86-408a-95e3-06d7f95a8c250020272bd4884c45bbd4a3fccfa0a8ee.jpg'"  alt="出错了">-->
+[[${#servletContext.contextPath}]]
+</body>
+</html>

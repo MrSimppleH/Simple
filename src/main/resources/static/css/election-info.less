@@ -1,0 +1,76 @@
+@import "initial.less";
+
+body {
+    .lyf();
+    background: transparent!important;
+    .election-info {
+        width: @w[w3];
+        height: 400px;
+        .bdr();
+        position: relative;
+
+        .pic {
+            display: inline-block;
+            position: absolute;
+            left: 5%;
+            top: 5%;
+
+            img {
+                width: 250px;
+                height: 330px;
+                border-radius: 4px;
+            }
+        }
+
+        .info-list {
+            width: 110px;
+            position: absolute;
+            top: 50%;
+            left: 40%;
+            margin-left: -55px;
+            margin-top: -100px;
+
+            ul {
+                li {
+                    .bdr();
+                    height: 30px;
+                    line-height: 30px;
+                    .m(t);
+                    text-align: center;
+
+                    &:last-child {
+                        width: 600px;
+                        height: 160px;
+                        text-align: initial;
+                        text-indent: 2em;
+
+                        p:first-letter {
+                            font-size: 1.5em;
+                            color: red;
+                        }
+                    }
+                }
+            }
+
+        }
+
+        button{
+            position: absolute;
+            bottom: 10px;
+            left: 13%;
+            right: 50%;
+            width: 100px;
+            height: 30px;
+            border-radius: 4px;
+            span{
+                display: inline-block;
+ 
+                
+            }
+        }
+        canvas {
+            position: absolute;
+            right: 0;
+        }
+    }
+}

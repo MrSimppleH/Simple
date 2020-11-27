@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.computer.campaign.mapper.SimpleUserMapper">
+
+    <insert id="insertSimpleUser" parameterType="SimpleUser">
+        INSERT INTO simpleuser(su_id,su_name,d_id,su_pwd) VALUES (#{su_id},#{su_name},#{d_id},#{su_pwd})
+    </insert>
+
+    <select id="findBySu_id" parameterType="String" resultType="SimpleUser">
+        SELECT su_id,su_name,d_id,su_pwd FROM simpleuser WHERE su_id=#{su_id}
+    </select>
+
+   <resultMap id="Participant_Sort_DepartmentMap" type="Participant">
+        <id property="p_id" column="p_id"/>
+        <result property="p_name" column="p_name"/>
+        <result property="s_id" column="s_id"/>
+        <result property="d_id" column="d_id"/>
+        <result property="imgsrc" column="imgsrc"/>
+        <result property="wordsrc" column="wordsrc"/>
+        <result property="p_poll" column="p_poll"/>
+        <association property="sort" javaType="Sort">
+            <id property="s_id" column="s_id"/>
+            <result property="s_name" column="s_name"/>
+            <result property="requirement" column="requirement"/>
+            <result property="effect" column="effect"/>
+            <result property="s_poll" column="s_poll"/>
+        </association>
+        <association property="department" javaType="Department">
+            <id property="d_id" column="d_id"/>
+            <result property="d_name" column="d_name"/>
+            <result property="d_sum" column="d_sum"/>
+        </association>
+    </resultMap>
+    <sql id="Participant_Sort_Department">
+        p_id,p_name,participant.s_id,participant.d_id,imgsrc,wordsrc,p_poll,
+        s_name,requirement,effect,s_poll,d_name,d_sum
+    </sql>
+
+    <select id="showAllPartByD_id" parameterType="String" resultMap="Participant_Sort_DepartmentMap">
+        SELECT <include refid="Participant_Sort_Department"/> FROM participant,sort,department WHERE
+        participant.s_id=sort.s_id AND participant.d_id=department.d_id AND participant.d_id=#{d_id}
+    </select>
+
+    <select id="showPartByD_idS_id" parameterType="Participant" resultMap="Participant_Sort_DepartmentMap">
+        SELECT <include refid="Participant_Sort_Department"/> FROM participant,sort,department WHERE
+        participant.s_id=sort.s_id AND participant.d_id=department.d_id AND participant.s_id=#{s_id} AND participant.d_id=#{d_id}
+    </select>
+
+    <select id="findPartByP_idP_NameD_id" parameterType="Participant" resultMap="Participant_Sort_DepartmentMap">
+        SELECT <include refid="Participant_Sort_Department"/> FROM participant,sort,department
+            <where>
+                participant.s_id=sort.s_id AND participant.d_id=department.d_id
+                <if test="p_id!=null and p_id!=''">
+                    AND p_id LIKE concat('%',#{p_id},'%')
+                </if>
+                <if test="p_name!=null and p_name!=''">
+                    AND p_name LIKE concat('%',#{p_name},'%')
+                </if>
+                AND participant.d_id=#{d_id}
+            </where>
+    </select>
+
+    <resultMap id="SimpleUserCampaignDetail_ParticipantMap" type="SimpleUserCampaignDetail">
+        <id property="su_id" column="su_id"/>
+        <id property="s_id" column="s_id"/>
+        <result property="p_id" column="p_id"/>
+        <result property="d_id" column="d_id"/>
+        <association property="participant" javaType="Participant">
+            <id property="p_id" column="p_id"/>
+            <result property="p_name" column="p_name"/>
+            <result property="s_id" column="s_id"/>
+            <result property="d_id" column="d_id"/>
+            <result property="imgsrc" column="imgsrc"/>
+            <result property="wordsrc" column="wordsrc"/>
+            <result property="p_poll" column="p_poll"/>
+        </association>
+    </resultMap>
+    <sql id="SimpleUserCampaignDetail_Participant">
+        simpleusercampaigndetail.su_id,simpleusercampaigndetail.s_id,simpleusercampaigndetail.p_id,simpleusercampaigndetail.d_id,p_name,imgsrc,wordsrc,p_poll
+    </sql>
+    <select id="judgeBySu_idS_id" parameterType="SimpleUserCampaignDetail" resultMap="SimpleUserCampaignDetail_ParticipantMap">
+        SELECT <include refid="SimpleUserCampaignDetail_Participant"/> FROM simpleusercampaigndetail,participant WHERE
+        simpleusercampaigndetail.p_id=participant.p_id
+        AND simpleusercampaigndetail.su_id=#{su_id} AND simpleusercampaigndetail.s_id=#{s_id}
+    </select>
+
+    <insert id="vote" parameterType="SimpleUserCampaignDetail">
+        INSERT INTO simpleusercampaigndetail(su_id, s_id, p_id, d_id) VALUES (#{su_id},#{s_id},#{p_id},#{d_id})
+    </insert>
+
+    <update id="sumPoll" parameterType="String">
+        UPDATE participant SET p_poll=p_poll+1 WHERE p_id=#{p_id}
+    </update>
+    <update id="sumd_sum" parameterType="String">
+         UPDATE department SET d_sum=d_sum+1 WHERE d_id=#{d_id}
+    </update>
+</mapper>

@@ -1,0 +1,108 @@
+@import "initial.less";
+
+body {
+    .lyf();
+    // background-image: url(../images/bg1.jpg);
+    background-size: 100%;
+
+    header {
+        width: @w[w1];
+        height: 100px;
+        .center();
+        // display: flex;
+        // align-items: center;
+        // justify-content: center;
+        position: relative;
+        .bdr();
+        background-color: rgba(240, 255, 255, .3);
+
+        h1 {
+            display: inline-block;
+            position: absolute;
+            top: 10px;
+            left: 150px;
+
+            a {
+                background: url() no-repeat;
+                text-indent: 0px;
+                overflow: hidden;
+            }
+
+        }
+
+        ul {
+            height: 40px;
+            position: absolute;
+            right: 30%;
+            top: 50%;
+            margin-top: -20px;
+            display: inline-block;
+
+            li {
+                a {
+                    color: #333333;
+                }
+            }
+        }
+
+        .usermix {
+            position: absolute;
+            right: 20px;
+            bottom: 10px;
+
+            .dropdown-menu {
+                li {
+                    a {
+                        padding: 3px 3px;
+                        text-align: center
+                    }
+                }
+            }
+        }
+    }
+
+    .container {
+        .bdr();
+        width: @w[w1];
+        .center();
+        .m(t);
+        background-color: rgba(240, 255, 255, .3);
+
+        aside {
+            .bdr();
+            .m(t);
+            .m(r);
+            width: 20%;
+
+            .fl();
+
+            ul {
+                text-align: center;
+
+                li {
+                    .m(l, 15px);
+                    .m(t);
+
+                    a {
+                        border-radius: 4px;
+                        line-height: 50px;
+                        color: #333333;
+                        text-decoration: none;
+                        display: inline;
+                    }
+                }
+            }
+        }
+
+        article {
+            padding: 5px;
+            .bdr();
+            .m(t);
+            width: calc(100% - 20% - 10px - 30px);
+            height: 100%;
+            .fl(right);
+
+
+        }
+    }
+}

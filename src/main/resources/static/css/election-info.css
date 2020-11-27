@@ -1,0 +1,81 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+ul,
+ol {
+  list-style: none;
+}
+a {
+  text-decoration: none;
+}
+img {
+  border: none;
+  vertical-align: bottom;
+}
+body {
+  background: transparent!important;
+}
+body .election-info {
+  width: 945px;
+  height: 400px;
+  border: 1px solid #333333;
+  border-radius: 5px;
+  position: relative;
+}
+body .election-info .pic {
+  display: inline-block;
+  position: absolute;
+  left: 5%;
+  top: 5%;
+}
+body .election-info .pic img {
+  width: 250px;
+  height: 330px;
+  border-radius: 4px;
+}
+body .election-info .info-list {
+  width: 110px;
+  position: absolute;
+  top: 50%;
+  left: 40%;
+  margin-left: -55px;
+  margin-top: -100px;
+}
+body .election-info .info-list ul li {
+  border: 1px solid #333333;
+  border-radius: 5px;
+  height: 30px;
+  line-height: 30px;
+  margin-top: 10px;
+  text-align: center;
+}
+body .election-info .info-list ul li:last-child {
+  width: 600px;
+  height: 120px;
+  text-align: initial;
+  text-indent: 2em;
+}
+body .election-info .info-list ul li:last-child p:first-letter {
+  font-size: 1.5em;
+  color: red;
+}
+body .election-info button {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  right: 50%;
+  width: 100px;
+  height: 30px;
+  border-radius: 4px;
+}
+body .election-info button span {
+  display: inline-block;
+}
+body .election-info canvas {
+  position: absolute;
+  right: 0;
+}

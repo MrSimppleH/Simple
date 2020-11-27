@@ -1,0 +1,83 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+ul,
+ol {
+  list-style: none;
+}
+a {
+  text-decoration: none;
+}
+img {
+  border: none;
+  vertical-align: bottom;
+}
+.align {
+  width: 120px;
+  height: 30px;
+  text-align: justify;
+  display: inline-block;
+}
+body {
+  background: transparent!important;
+}
+body .search {
+  height: 50px;
+  position: relative;
+  line-height: 50px;
+  border: 1px solid #333333;
+  border-radius: 5px;
+}
+body .search button {
+  height: 34px;
+  position: absolute;
+  top: 50%;
+  margin-top: -17px;
+  margin-left: 20px;
+}
+body .search .search-input {
+  position: absolute;
+  left: 15%;
+}
+body .search .search-input input {
+  width: 200px;
+  height: 26px;
+  border-radius: 4px;
+  padding-left: 5px;
+}
+body .search marquee {
+  position: absolute;
+  right: 0;
+  color: red;
+  font-size: 18px;
+  font-weight: bolder;
+}
+body .election-list {
+  margin-top: 10px;
+}
+body .election-list .election-item {
+  width: 150px;
+  text-align: center;
+  border: 1px solid #333333;
+  border-radius: 5px;
+  padding: 5px;
+  display: inline-block;
+  margin-left: 20px;
+  margin-bottom: 10px;
+}
+body .election-list .election-item ul li {
+  border-bottom: 1px dotted #333333;
+}
+body .election-list .election-item ul li img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+}
+body .election-list .election-item ul li:not(:nth-of-type(1)) {
+  height: 30px;
+  line-height: 30px;
+}

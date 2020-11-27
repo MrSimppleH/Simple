@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>参与竞选</title>
+    <script th:src="@{ckeditor/ckeditor.js}"></script>
+    <script th:src="@{/webjars/jquery/3.3.1/jquery.js}"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{css/index.css}"/>
+
+</head>
+<body>
+
+<div>
+    <form >
+       竞选编号： <input type="text" name="p_id" th:value="p+${session.user_id}" readonly="readonly" ><br>
+        名字：<input type="text" name="p_name" th:value="${session.user_name}" readonly="readonly" ><br>
+        竞选职位：
+        <select name="s_id" id="s_id" >
+            <option>请选择职位</option>
+            <option  th:each="sort:${session.sortList}" th:value="${sort.s_id}">[[${sort.s_name}]]</option>
+        </select><br>
+        选择竞选图片：<input type="file" name="imgFile" onchange="checkFile(this)"><span id="msg"></span><br>
+        竞选词： <textarea id="editor" name="wordsrc" >
+                    请填写竞选词
+                </textarea>
+        <script>
+            CKEDITOR.replace( 'editor' );
+        </script>
+        <br>
+
+        <input type="hidden" name="d_id" th:value="${session.d_id}">
+        <button id="contend" type="submit">提交</button>
+    </form>
+</div>
+
+<script>
+
+    function checkFile(obj){
+       var photoExt=obj.value.substr(obj.value.lastIndexOf(".")).toLowerCase();//获得文件后缀名
+        console.log(typeof (photoExt),photoExt)
+        if((photoExt==".jpg")||(photoExt==".jpeg")||(photoExt==".png")){
+
+        }else{
+            alert("请上传后缀名为jpg,jpeg,png格式的照片!");
+            return false;
+        }
+        var fileSize = 0;
+        var isIE = /msie/i.test(navigator.userAgent) && !window.opera;
+        if (isIE && !obj.files) {
+            var filePath = obj.value;
+            var fileSystem = new ActiveXObject("Scripting.FileSystemObject");
+            var file = fileSystem.GetFile (filePath);
+            fileSize = file.Size;
+        }else {
+            fileSize = obj.files[0].size;
+            console.log(fileSize)
+        }
+        fileSize=Math.round(fileSize/1024*100)/100; //单位为KB
+        console.log(fileSize)
+        if(fileSize>=3072){
+            $("#msg").html("<font color='red'>照片最大尺寸为3M，请重新上传!</font>");
+            return false;
+        }else {
+            $("#msg").html("<font color='green'>✔</font>");
+        }
+    }
+
+
+</script>
+</body>
+</html>

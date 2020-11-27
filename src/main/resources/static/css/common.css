@@ -1,0 +1,106 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+ul,
+ol {
+  list-style: none;
+}
+a {
+  text-decoration: none;
+}
+img {
+  border: none;
+  vertical-align: bottom;
+}
+.align {
+  width: 120px;
+  height: 30px;
+  text-align: justify;
+  display: inline-block;
+}
+body {
+  background-size: 100%;
+}
+body header {
+  width: 1280px;
+  height: 100px;
+  margin: 0 auto;
+  position: relative;
+  border: 1px solid #333333;
+  border-radius: 5px;
+  background-color: rgba(240, 255, 255, 0.3);
+}
+body header h1 {
+  display: inline-block;
+  position: absolute;
+  top: 10px;
+  left: 150px;
+}
+body header h1 a {
+  background: url() no-repeat;
+  text-indent: 0px;
+  overflow: hidden;
+}
+body header ul {
+  height: 40px;
+  position: absolute;
+  right: 30%;
+  top: 50%;
+  margin-top: -20px;
+  display: inline-block;
+}
+body header ul li a {
+  color: #333333;
+}
+body header .usermix {
+  position: absolute;
+  right: 20px;
+  bottom: 10px;
+}
+body header .usermix .dropdown-menu li a {
+  padding: 3px 3px;
+  text-align: center;
+}
+body .container {
+  border: 1px solid #333333;
+  border-radius: 5px;
+  width: 1280px;
+  margin: 0 auto;
+  margin-top: 10px;
+  background-color: rgba(240, 255, 255, 0.3);
+}
+body .container aside {
+  border: 1px solid #333333;
+  border-radius: 5px;
+  margin-top: 10px;
+  margin-right: 10px;
+  width: 20%;
+  float: left;
+}
+body .container aside ul {
+  text-align: center;
+}
+body .container aside ul li {
+  margin-left: 15px;
+  margin-top: 10px;
+}
+body .container aside ul li a {
+  border-radius: 4px;
+  line-height: 50px;
+  color: #333333;
+  text-decoration: none;
+  display: inline;
+}
+body .container article {
+  padding: 5px;
+  border: 1px solid #333333;
+  border-radius: 5px;
+  margin-top: 10px;
+  width: calc(100% - 20% - 10px - 30px);
+  height: 100%;
+  float: right;
+}

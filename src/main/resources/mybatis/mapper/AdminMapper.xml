@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.computer.campaign.mapper.AdminMapper">
+    <resultMap id="departmentANDsort" type="Department">
+        <id property="d_id" column="did"></id>
+        <result property="d_name" column="d_name"></result>
+        <result property="d_sum" column="d_sum"></result>
+        <collection property="sorts" ofType="Sort">
+            <id property="s_id" column="s_id"/>
+            <result property="s_name" column="s_name"/>
+            <result property="requirement" column="requirement"/>
+            <result property="effect" column="effect"/>
+            <result property="s_poll" column="s_poll"/>
+        </collection>
+    </resultMap>
+    <resultMap id="sortANDdepartment" type="Sort">
+        <id property="s_id" column="s_id"/>
+        <result property="s_name" column="s_name"/>
+        <result property="requirement" column="requirement"/>
+        <result property="effect" column="effect"/>
+        <result property="s_poll" column="s_poll"/>
+        <result property="d_id" column="did"/>
+        <association property="department" javaType="Department">
+            <id property="d_id" column="d_did"></id>
+            <result property="d_name" column="d_name"></result>
+        </association>
+    </resultMap>
+    <!--仅显示竞选类别（竞选职位，餐饮菜系等）-->
+    <select id="showAllSort" resultMap="sortANDdepartment">
+        /*如果d_name字段为空，则赋值“常规组织通用”*/
+        SELECT s_id, s_name, requirement, effect, s_poll, sort.d_id did,department.d_id d_did, IFNULL(d_name,"常规组织通用")as d_name FROM sort LEFT JOIN department on sort.d_id=department.d_id
+    </select>
+    <!--显示全部组织-->
+    <select id="showAllDepartment" resultMap="departmentANDsort">
+        select department.d_id did, d_name, d_sum,
+ s_id, s_name, requirement, effect, s_poll, sort.d_id from department left JOIN sort on department.d_id=sort.d_id
+    </select>
+    <!--添加组织-->
+    <insert id="insertDepartment" parameterType="Department">
+        insert into department(d_id, d_name, d_sum) values (#{d_id},#{d_name},0)
+    </insert>
+    <!--添加竞选类别-->
+    <insert id="insert" parameterType="Sort">
+        INSERT INTO sort(s_id,s_name,requirement,effect,s_poll,d_id) VALUES (#{s_id},
+        #{s_name},#{requirement},#{effect},0,#{d_id})
+    </insert>
+    <update id="update" parameterType="Sort">
+        UPDATE sort SET s_name=#{s_name},requirement=#{requirement},effect=#{effect},
+        s_poll=#{s_poll} WHERE s_id=#{s_id}
+    </update>
+    <delete id="delete" parameterType="String">
+        DELETE FROM sort WHERE s_id=#{s_id}
+    </delete>
+    <select id="showByS_id" parameterType="String" resultType="Sort">
+        SELECT * FROM sort WHERE s_id=#{s_id}
+    </select>
+
+</mapper>

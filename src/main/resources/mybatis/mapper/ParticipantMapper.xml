@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.computer.campaign.mapper.ParticipantMapper">
+    <resultMap id="participantANDsort" type="Participant">
+        <id property="p_id" column="p_id"/>
+        <result property="p_name" column="p_name"/>
+        <association property="sort" javaType="Sort">
+            <id property="s_id" column="sort.s_id"/>
+            <result property="s_name" column="s_name"/>
+        </association>
+    </resultMap>
+    <insert id="contend" parameterType="Participant">
+        INSERT INTO participant(p_id,p_name,s_id,d_id,imgsrc,wordsrc,p_poll) VALUES (#{p_id},
+        #{p_name},#{s_id},#{d_id},#{imgsrc},#{wordsrc},0)
+    </insert>
+    <update id="sumCpoll" parameterType="String">
+        UPDATE sort SET s_poll=s_poll+1 WHERE s_id=#{s_id}
+    </update>
+    <sql id="findParticipantByP_id">
+        SELECT * FROM participant WHERE p_id=#{p_id}
+    </sql>
+    <select id="judge" parameterType="String" resultMap="participantANDsort">
+        select p_id, p_name,  sort.s_id, s_name from participant,sort where participant.s_id=sort.s_id and p_id=#{p_id}
+    </select>
+
+</mapper>

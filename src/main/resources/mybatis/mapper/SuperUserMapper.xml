@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.computer.campaign.mapper.SuperUserMapper">
+
+    <resultMap id="Participant_Sort_DepartmentMap" type="Participant"
+               extends="com.computer.campaign.mapper.SimpleUserMapper.Participant_Sort_DepartmentMap"/>
+
+    <sql id="Participant_Sort_Department">
+        p_id,p_name,participant.s_id,participant.d_id,imgsrc,wordsrc,p_poll,
+        s_name,requirement,effect,s_poll,d_name,d_sum
+    </sql>
+
+    <select id="findByP_idP_name" parameterType="Participant" resultMap="Participant_Sort_DepartmentMap">
+        SELECT <include refid="Participant_Sort_Department"/> FROM participant,sort,department
+        <where>
+            participant.s_id=sort.s_id AND participant.d_id=department.d_id
+            <if test="p_id!=null and p_id!=''">
+                AND p_id like concat('%',#{p_id},'%')
+            </if>
+            <if test="p_name!=null and p_name!=''">
+                AND p_name LIKE concat('%',#{p_name},'%')
+            </if>
+        </where>
+    </select>
+
+    <resultMap id="SuperUserCampaignDetail_ParticipantMap" type="SuperUserCampaignDetail">
+        <id property="sup_id" column="sup_id"/>
+        <id property="d_id" column="d_id"/>
+        <id property="s_id" column="s_id"/>
+        <result property="p_id" column="p_id"/>
+        <association property="participant" javaType="Participant">
+            <id property="p_id" column="p_id"/>
+            <result property="p_name" column="p_name"/>
+            <result property="s_id" column="s_id"/>
+            <result property="d_id" column="d_id"/>
+            <result property="imgsrc" column="imgsrc"/>
+            <result property="wordsrc" column="wordsrc"/>
+            <result property="p_poll" column="p_poll"/>
+        </association>
+    </resultMap>
+
+    <sql id="SuperUserCampaignDetail_Participant">
+        sup_id,superusercampaigndetail.d_id,superusercampaigndetail.s_id,superusercampaigndetail.p_id,p_name,imgsrc,wordsrc,p_poll
+    </sql>
+
+    <select id="judgeBySu_idS_id" parameterType="SuperUserCampaignDetail" resultMap="SuperUserCampaignDetail_ParticipantMap">
+        SELECT <include refid="SuperUserCampaignDetail_Participant"/> FROM superusercampaigndetail,participant WHERE
+        superusercampaigndetail.p_id=participant.p_id AND superusercampaigndetail.sup_id=#{sup_id}
+        AND superusercampaigndetail.d_id=#{d_id} AND superusercampaigndetail.s_id=#{s_id}
+    </select>
+
+    <insert id="vote" parameterType="SuperUserCampaignDetail">
+        INSERT INTO superusercampaigndetail(sup_id, d_id, s_id, p_id) VALUES (#{sup_id},#{d_id},#{s_id},#{p_id})
+    </insert>
+
+    <update id="sumPoll" parameterType="String">
+        UPDATE participant SET p_poll=p_poll+10 WHERE p_id=#{p_id}
+    </update>
+</mapper>

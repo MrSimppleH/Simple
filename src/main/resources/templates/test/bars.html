@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+<body>
+<header  th:fragment="superHeader_bar">
+    <h1><a href="">哈信息综合竞选管理系统</a></h1>
+
+
+    <div class="usermix">
+
+        <button type="button" class="btn btn-primary btn-sm dropdown" >
+            <span class="glyphicon glyphicon-user"></span> <span data-toggle="dropdown">[[${session.user_name}]] <b class="caret"></b></span>
+            <ul class="dropdown-menu" style="min-width: 100%;min-height: 90px; ">
+
+                <li><a href="/logout">切换账号</a></li>
+                <li><a href="/logout">退出</a></li>
+            </ul>
+        </button>
+    </div>
+</header>
+
+<header  th:fragment="simpleHeader_bar">
+    <h1><a href="#">[[${session.d_name}]]选举系统</a></h1>
+        <div class="usermix">
+            <button type="button" class="btn btn-primary btn-sm">
+                <span class="glyphicon glyphicon-home"></span><span>[[${session.d_name}]]</span>
+            </button>
+            <button type="button" class="btn btn-primary btn-sm dropdown" >
+                <span class="glyphicon glyphicon-user"></span> <span data-toggle="dropdown">[[${session.user_name}]]<b class="caret"></b></span>
+                <ul class="dropdown-menu" style="min-width: 100%;min-height: 90px; ">
+                    <!--<li><a href="#" >个人信息</a></li>-->
+                    <li><a href="/logout">切换账号</a></li>
+                    <li><a href="/logout">退出</a></li>
+                </ul>
+            </button>
+        </div>
+
+
+</header>
+<div class="post-list" th:fragment="superSort_bar">
+    <ul>
+        <li th:if="${not#lists.isEmpty(session.sortList)}" th:each="sort:${session.sortList}">
+            <span class="glyphicon glyphicon-book"></span>
+            <a th:href="@{/showByD_idS_id(s_id=${sort.s_id},d_id=${session.d_id})}">[[${sort.s_name}]]</a>
+        </li>
+        <li><span class="glyphicon glyphicon-book"></span><a th:href="@{/showByD_id(d_id=${session.d_id})}">显示全部</a></li>
+    </ul>
+</div>
+
+    <aside th:fragment="department_bar">
+        <ul>
+            <li th:each="department:${session.departmentList}">
+                <span class="glyphicon glyphicon-home"></span>
+                <a th:href="@{/showByD_id(d_id=${department.d_id})}" >[[${department.d_name}]]</a>
+            </li>
+        </ul>
+    </aside>
+
+    <aside th:fragment="simpleSort_bar">
+        <ul>
+            <div th:each="sort:${session.sortList}">
+                <li ><span class="glyphicon glyphicon-book"></span>
+                    <a th:class="${activeUri=='showByS_id?s_id=06'?'active':'null'}"
+                       th:href="@{/showByS_id(s_id=${sort.s_id})}">[[${sort.s_name}]]
+                    </a>
+                </li>
+            </div>
+            <li><span class="glyphicon glyphicon-book"></span><a th:href="@{/showAllBy_id}">显示全部[[${activeUri}]]</a></li>
+        </ul>
+
+    </aside>
+
+</body>
+</html>

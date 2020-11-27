@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>管理员首页</title>
+    <script th:src="@{/webjars/jquery/3.3.1/jquery.js}"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/adminshowall.css}"/>
+    <link th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.css}" rel="stylesheet"/>
+    <script th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.js}"></script>
+    <style>
+        .show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <header th:replace="test/bars :: superHeader_bar"></header>
+    <div class="container">
+        <aside>
+            <ul>
+                <li><span class="glyphicon glyphicon-list-alt"></span>请选择管理对象</li>
+                <li onclick="ShowHidden(group)"><span class="glyphicon glyphicon-book"></span> 组织管理</li>
+                <li onclick="ShowHidden(election)"><span class="glyphicon glyphicon-book"></span> 竞选位管理</li>
+            </ul>
+        </aside>
+        <article id="main">
+            <div class="group" id="group">
+                <div class="addgroup">
+                    <button class="btn btn-info" data-toggle="modal" data-target="#addgroupModal">添加组织</button>
+                    <button class="btn btn-sm" onclick="Hidden(group)"><span
+                            class="glyphicon glyphicon-remove"></span></button>
+                </div>
+                <div class="grouplist">
+                    <div class="table-responsive">
+                        <table class="table table-striped ">
+                            <thead>
+                            <tr>
+                                <th>组织编号</th>
+                                <th>组织名</th>
+                                <th>组织合计人数</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <div  th:each="department:${departmentList}">
+                                    <tr >
+                                        <td >[[${department.d_id}]]</td>
+                                        <td>[[${department.d_name}]]</td>
+                                        <td>[[${department.d_sum}]]</td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <!-- <a href="" class="btn btn-default">修改</a> -->
+                                                <a href="javascript:alert('开发者暂时关闭该功能')" class="btn btn-danger">删除</a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr th:each="sort:${department.sorts}" >
+                                        <td></td>
+                                        <!--                <td >组织内专属职位</td>-->
+                                        <td >[[${sort.s_name}]]</td>
+                                    </tr>
+                                </div>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- 职位 -->
+            <div class="election" id="election">
+                <div class="addelection">
+                    <button class="btn btn-info" data-toggle="modal" data-target="#addelectionModal">添加职位</button>
+                    <button class="btn btn-sm " onclick="Hidden(election)"><span
+                            class="glyphicon glyphicon-remove"></span></button>
+                </div>
+                <div class="electionlist">
+                    <div class="table-responsive">
+                        <table class="table table-striped ">
+                            <thead>
+                            <tr>
+                                <th>职位编号</th>
+                                <th>职位名</th>
+                                <th>要求</th>
+                                <th>作用</th>
+                                <th>总竞选数</th>
+                                <th>职位竞选范围</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr  th:each="sort:${sortList}">
+                                <td >[[${sort.s_id}]]</td>
+                                <td>[[${sort.s_name}]]</td>
+                                <td>[[${sort.requirement}]]</td>
+                                <td>[[${sort.effect}]]</td>
+                                <td>[[${sort.s_poll}]]</td>
+                                <td  th:text="${sort.department.d_name}"></td>
+                                <td>
+                                    <div class="btn-group">
+                                        <a href="javascript:alert('开发者暂时关闭该功能')" class="btn btn-default">修改</a>
+                                        <a href="javascript:alert('开发者暂时关闭该功能')" class="btn btn-danger">删除</a>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </div>
+    <!-- 添加组织 -->
+    <div class="modal fade" id="addgroupModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel"></h4>添加组织</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-inline" role="form" id="insertDepartmentForm" action="/insertDepartment" method="post">
+                        <div class="form-group ">
+                            <span class="align">组织名：</span><input type="text" class="form-control input-sm" id="d_name" name="d_name" placeholder="请输入组织名称">
+                        </div>
+
+                        <div class="formgroup" style="margin-top: 5px;">
+                            <span class="align">请选择组织级别：</span>
+                            <select id="level" name="level" class="form-control">
+                                <option value="">请设定该组织的级别</option>
+                                <option th:value="0">普通组织</option>
+                                <option th:value="1">特殊组织</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" id="departmentSubmit" onclick="insertDepartment()"  class="btn btn-primary">添加</button>
+                    <script>
+                        function insertDepartment(){
+                            $("#insertDepartmentForm").submit()
+                        }
+                    </script>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+    <!-- 添加职位 -->
+    <div class="modal fade" id="addelectionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel"></h4>添加职位</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-inline" role="form" action="/insertSort" method="post" id="insertSortForm">
+                        <div class="form-group ">
+                            <span class="align">职位名称：</span><input type="text" class="form-control input-sm" id="s_name" name="s_name" placeholder="请输入职位名称">
+                        </div>
+                        <div class="formgroup" style="margin-top: 5px;">
+                            <span class="align">请选择职位级别：</span>
+                            <select id="scope" name="d_id" class="form-control">
+                                <option value="" disabled selected hidden>请设定该职位应用范围</option>
+                                <option th:value="public">常规组织通用职位</option>
+                                <option  th:each="department:${departmentList}" th:value="${department.d_id}">[[${department.d_name}]]</option>
+                            </select>
+                            <p style="color: brown;">（**若您将职位添加到普通组织中，则普通用户登录和竞选时只会显示定制的职位）</p>
+                        </div>
+                        <div class="formgroup">
+                            <span class="align">作用：</span><textarea name="requirement" cols="50" rows="5" style="vertical-align: top;"></textarea>
+                        </div>
+                        <div class="formgroup" style="margin-top: 5px;">
+                            <span class="align">要求：</span><textarea name="effect" id="" cols="50" rows="5" style="vertical-align: top;"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" id="sortSubmit" onclick="insertSort()" class="btn btn-primary">添加</button>
+                    <script>
+                        function insertSort() {
+                            $("#insertSortForm").submit()
+                        }
+                    </script>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+
+<script>
+    $(function () {
+        $("#departmentSubmit").mouseover(
+            function () {
+                if(($("#level").val()=="")||($("#d_name").val()=="")){
+                    alert("请将信息补充完整");
+                }else {
+                    return false;
+                    }
+            }
+        )
+    })
+
+    $(function () {
+        $("#sortSubmit").mouseover(
+            function () {
+                if(($("#scope").val()=="")||($("#s_name").val()=="")){
+                    alert("请将信息补充完整");
+                }else {
+                    return false;
+                }
+            }
+        )
+    })
+    $(function () {
+        $("#updateSort").click()
+    })
+</script>
+        <script>
+            var gainGroup = $("group");
+            var gainElection = $("election");
+
+
+            function ShowHidden(obj) {
+                if (obj.style.display == "block") {
+                    obj.style.display = 'none';
+
+                } else {
+                    obj.style.display = 'block';
+                }
+                //    obj.className = "show";
+            }
+
+            function Hidden(obj) {
+                obj.style.display = 'none';
+
+            }
+        </script>
+</body>
+</html>

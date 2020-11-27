@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.computer.campaign.mapper.SystemMapper">
+
+    <select id="showAllDepartment" resultType="Department">
+        SELECT d_id,d_name,d_sum  FROM department
+        <where>
+            <if test="d_id!=null and d_id!=''">
+                d_id=#{d_id}
+            </if>
+        </where>
+    </select>
+
+    <select id="showAllSort" parameterType="string" resultType="Sort">
+        SELECT s_id,s_name,requirement,effect,s_poll FROM sort
+        where d_id=#{d_id}
+    </select>
+
+    <resultMap id="Participant_Sort_DepartmentMap" type="Participant"
+               extends="com.computer.campaign.mapper.SimpleUserMapper.Participant_Sort_DepartmentMap"/>
+    <sql id="Participant_Sort_Department">
+        p_id,p_name,participant.s_id,participant.d_id,imgsrc,wordsrc,p_poll,
+        s_name,requirement,effect,s_poll,d_name,d_sum
+    </sql>
+
+    <select id="showAllPartsByD_idS_id" parameterType="String" resultMap="Participant_Sort_DepartmentMap">
+        SELECT <include refid="Participant_Sort_Department"/> FROM participant,sort,department WHERE
+        participant.s_id=sort.s_id AND participant.d_id=department.d_id AND participant.d_id=#{d_id} AND participant.s_id=#{s_id}
+    </select>
+
+    <select id="showByP_id" parameterType="String" resultMap="Participant_Sort_DepartmentMap">
+        SELECT <include refid="Participant_Sort_Department"/> FROM participant,sort,department WHERE
+        participant.s_id=sort.s_id AND participant.d_id=department.d_id AND p_id=#{p_id}
+    </select>
+
+    <select id="showAllPartByD_id" parameterType="String" resultMap="Participant_Sort_DepartmentMap">
+        SELECT <include refid="Participant_Sort_Department"/> FROM participant,sort,department WHERE
+        participant.s_id=sort.s_id AND participant.d_id=department.d_id AND participant.d_id=#{d_id}
+    </select>
+    <select id="p_pollByD_idS_id" resultType="P_nameP_poll">
+        select p_name,p_poll from participant where d_id =#{d_id} and s_id=#{s_id}
+    </select>
+</mapper>

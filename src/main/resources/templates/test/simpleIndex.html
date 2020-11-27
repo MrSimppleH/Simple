@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>普通用户主页</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script th:src="@{/webjars/jquery/3.3.1/jquery.js}"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{css/common.css}"/>
+    <link rel="stylesheet"th:href="@{css/initial-info.css}">
+    <link th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.css}" rel="stylesheet"/>
+    <script th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.js}"></script>
+    <script th:src="@{/ckeditor/ckeditor.js}"></script>
+<style>
+    .active {
+        background-color: rgb(63, 247, 198) !important;
+    }
+</style>
+    <script>
+
+        $(function () {
+            $("#checkContend").click(
+                function () {
+                    $.ajax({
+                        url:"/checkContend",
+                        type:"post",
+                        data:{su_id:"[[${session.user_id}]]"},
+                        dataType:"text",
+                        success:function (s_name) {
+                            if(s_name!="1"){
+                                alert("抱歉您不能参与竞选,因为您已经竞选本组织【"+s_name+"】职位")
+                                $(location).attr("href","/showAllBy_id")
+                                return false;
+                            }else {
+                                $("#enlistModal").modal('show')
+                                // $(location).attr("href","/participantPage")
+                            }
+                        },
+                        error:function () {
+                            alert("ajax请求失败")
+                        }
+                    })
+                }
+            )
+            $("#search").mouseover(function () {
+                $("#p_nameOrp_id").attr("value",$("#p_name").val())
+            });
+            $("#search").click(function () {
+                $("#serachForm").submit()
+            })
+        })
+    </script>
+</head>
+<body>
+<header th:replace="test/bars :: simpleHeader_bar"></header>
+<div class="container">
+    <aside th:replace="test/bars :: simpleSort_bar"></aside>
+    <article>
+        <div class="search">
+            <button  class="btn btn-info" data-toggle="modal"  id="checkContend">参与竞选</button>
+            <div class="search-input">
+                <input type="text" placeholder="请输入竞选编号或名字" id="p_name">
+                <button id="search" class="btn btn-success" >搜索</button>
+            </div>
+            <marquee behavior="scroll" direction="left" width="500px">**为了保证竞选得真实性，请正确填写信息！</marquee>
+        </div>
+        <div class="election-list" th:if="${not#lists.isEmpty(participantList)}" >
+            <div class="election-item" th:each="participant:${participantList}">
+                <ul>
+                    <li>
+                        <p><a th:href="@{showPartByP_id/}+${participant.p_id}"><img th:src="@{${participant.imgsrc}}"></a></p>
+                    </li>
+                    <li >
+                        <p>
+                            <a th:href="@{showPartByP_id/}+${participant.p_id}">[[${participant.p_id}]]</a>
+                        </p>
+                    </li>
+                    <li><p th:text="'名字：'+${participant.p_name}"></p></li>
+                    <li><p><a th:href="@{showByS_id(s_id=${participant.s_id})}">[['竞选：'+${participant.sort.s_name}]]</a></p></li>
+                    <li><p th:text="'已得票数：'+${participant.p_poll}"></p></li>
+                </ul>
+            </div>
+            <div   th:if="${#lists.isEmpty(participantList)}"  >
+                未找到竞选人
+            </div>
+        </div>
+    </article>
+</div>
+
+<!-- 参与竞选模态框 -->
+<div class="modal fade" id="enlistModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel"></h4>参加竞选</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-inline" role="form" action="/contend" enctype="multipart/form-data" method="post" id="contendForm">
+                    <div class="form-group ">
+                        <span class="align">竞选编号：</span>
+                        <input type="text" class="form-control input-sm" name="p_id" th:value="p+${session.user_id}" readonly="readonly">
+                    </div>
+                    <div class="formgroup" style="margin-top: 5px;">
+                        <span class="align">名字：</span>
+                        <input type="text" class="form-control input-sm" name="p_name" th:value="${session.user_name}" readonly="readonly" >
+                    </div>
+                    <div class="formgroup" style="margin-top: 5px;">
+                        <span class="align">竞选职位：</span>
+                        <select name="s_id" id="s_id" class="form-control">
+                            <option>请选择职位</option>
+                            <option  th:each="sort:${session.sortList}" th:value="${sort.s_id}">[[${sort.s_name}]]</option>
+                        </select>
+                    </div>
+                    <div class="formgroup" style="margin-top: 5px;">
+                        <span class="align">选择竞选图片：</span>
+                        <input type="file" name="imgFile" onchange="checkFile(this)"><span id="msg"></span>>
+                    </div>
+                    <div class="formgroup" style="margin-top: 5px;">
+                        <span class="align">竞选词：</span>
+                        <textarea id="editor" name="wordsrc" cols="50" rows="5" style="vertical-align: top;"></textarea>
+                        <script>
+                            CKEDITOR.replace( 'editor' );
+                        </script>
+                    </div>
+                    <input type="hidden" name="d_id" th:value="${session.d_id}">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" id="contend" onclick="contend()" class="btn btn-primary">参与竞选</button>
+
+            </div>
+        </div><!-- /.modal-content -->
+    </div>
+</div>
+<form id="serachForm" th:action="@{/simpleSearch}" method="post">
+    <input type="hidden" id="p_nameOrp_id"  name="p_nameOrp_id" >
+    <input type="hidden" name="d_id" th:value="${session.d_id}" >
+</form>
+
+<script>
+    function contend() {
+        $("#contendForm").submit()
+    }
+    function checkFile(obj){
+        var photoExt=obj.value.substr(obj.value.lastIndexOf(".")).toLowerCase();//获得文件后缀名
+        console.log(typeof (photoExt),photoExt)
+        if((photoExt==".jpg")||(photoExt==".jpeg")||(photoExt==".png")){
+
+        }else{
+            alert("请上传后缀名为jpg,jpeg,png格式的照片!");
+            return false;
+        }
+        var fileSize = 0;
+        var isIE = /msie/i.test(navigator.userAgent) && !window.opera;
+        if (isIE && !obj.files) {
+            var filePath = obj.value;
+            var fileSystem = new ActiveXObject("Scripting.FileSystemObject");
+            var file = fileSystem.GetFile (filePath);
+            fileSize = file.Size;
+        }else {
+            fileSize = obj.files[0].size;
+            console.log(fileSize)
+        }
+        fileSize=Math.round(fileSize/1024*100)/100; //单位为KB
+        console.log(fileSize)
+        if(fileSize>=3072){
+            alert("图片过大")
+            $("#msg").html("<font color='red'>照片最大尺寸为3M，请重新上传!</font>");
+            return false;
+        }else {
+            $("#msg").html("<font color='green'>✔</font>");
+        }
+    }
+</script>
+</body>
+</html>

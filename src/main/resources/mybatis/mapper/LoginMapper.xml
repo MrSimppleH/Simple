@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.computer.campaign.mapper.LoginMapper">
+    <select id="adminLogin" parameterType="Admin" resultType="Admin">
+        SELECT * FROM admin WHERE a_id=#{a_id} AND a_pwd=#{a_pwd}
+    </select>
+    <resultMap id="SimpleUserANDDeaprtment" type="SimpleUser">
+        <id property="su_id" column="su_id"></id>
+        <result property="su_name" column="su_name"></result>
+        <result property="d_id"    column="d_id"   ></result>
+        <result property="su_pwd"  column="su_pwd" ></result>
+        <association property="department" javaType="Department"
+            select="com.computer.campaign.mapper.SystemMapper.showAllDepartment" column="d_id">
+            
+        </association>
+    </resultMap>
+    <select id="simpleUserLogin" parameterType="SimpleUser" resultMap="SimpleUserANDDeaprtment">
+        SELECT * FROM simpleuser WHERE su_id=#{su_id} AND su_pwd=#{su_pwd}
+    </select>
+    <select id="superUserLogin" parameterType="SuperUser" resultType="SuperUser">
+        SELECT * FROM superuser WHERE sup_id=#{sup_id} AND sup_pwd=#{sup_pwd}
+    </select>
+
+</mapper>

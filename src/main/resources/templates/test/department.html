@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>高级用户首页</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.css}"/>
+    <!--<link rel="stylesheet" type="text/css" th:href="@{/css/ad-common.css}"/>-->
+    <script th:src="@{/webjars/jquery/3.3.1/jquery.js}"></script>
+    <link th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.css}" rel="stylesheet"/>
+    <script th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.js}"></script>
+</head>
+<body>
+<header th:replace="test/bars :: superHeader_bar"></header>
+    <div class="container">
+        <aside th:replace="test/bars :: department_bar">
+        </aside>
+        <article id="main">
+            <div id="menuFrame" name="menuFrame" th:include="test/welcome" ></div>
+        </article>
+<!--        <article id="main">-->
+
+<!--            <iframe id="topFrame" name="topFrame" th:insert="test/post-list :: html" width="100%;" height="50px" scrolling="yes"-->
+<!--                    frameborder="no" allowtransparency="true"></iframe>-->
+
+<!--            <iframe id="menuFrame" name="menuFrame" th:insert="test/ad_initial-info :: html" width="100%;" height="500px"-->
+<!--                    scrolling="yes" frameborder="no" allowtransparency="true"></iframe>-->
+<!--        </article>-->
+    </div>
+</body>
+
+</html>

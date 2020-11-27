@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>超级用户首页</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" th:href="@{css/common.css}"/>
+    <link rel="stylesheet" th:href="@{css/ad_initial-info.css}">
+
+    <script th:src="@{/webjars/jquery/3.3.1/jquery.js}"></script>
+    <link th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.css}" rel="stylesheet"/>
+    <script th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.js}"></script>
+    <script>
+       $(function () {
+           $("#search").mouseover(function () {
+               $("#p_nameOrp_id").attr("value",$("#p_name").val())
+           });
+           $("#search").click(function () {
+               $("#serachForm").submit()
+           })
+       })
+    </script>
+</head>
+<body>
+<header th:replace="test/bars :: superHeader_bar"></header>
+
+<div class="container">
+    <aside th:replace="test/bars :: department_bar"></aside>
+    <p th:if="${#lists.isEmpty(session.sortList)}" th:text="该组织未添加职位信息"></p>
+
+    <article id="main">
+      <div th:insert="test/bars :: superSort_bar" ></div>
+        <div class="election-list"  style="overflow-x: hidden;overflow-y: scroll;">
+            <div class="search-input">
+                <input type="text" placeholder="请输入竞选编号或名字" id="p_name" >
+                <button id="search" class="btn btn-success" >搜索</button>
+            </div>
+            <div   th:if="${#lists.isEmpty(participantList)}" th:text="未找到竞选人"></div>
+            <div class="election-item" th:each="participant:${participantList}">
+                <ul >
+                    <li>
+                        <p><a th:href="@{showPartByP_id/}+${participant.p_id}"><img th:src="@{${participant.imgsrc}}"></a></p>
+                    </li>
+                    <li >
+                        <p>
+                            <a th:href="@{showPartByP_id/}+${participant.p_id}">[[${participant.p_id}]]</a>
+                        </p>
+                    </li>
+                    <li><p th:text="'名字：'+${participant.p_name}"></p></li>
+                    <li><p><a th:href="@{showByS_id(s_id=${participant.s_id})}">[['竞选：'+${participant.sort.s_name}]]</a></p></li>
+                    <li><p th:text="'已得票数：'+${participant.p_poll}"></p></li>
+                </ul>
+            </div>
+        </div>
+        <form id="serachForm" th:action="@{/superSearch}" method="post">
+            <input type="hidden" id="p_nameOrp_id"  name="p_nameOrp_id" >
+        </form>
+
+    </article>
+</div>
+
+
+
+
+
+
+
+<script>
+
+</script>
+</div>
+</body>
+</html>

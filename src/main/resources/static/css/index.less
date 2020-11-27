@@ -1,0 +1,57 @@
+@import "initial.less";
+
+body {
+    font-family: "Microsoft YaHei";
+    font-size: 16px;
+    .lyf();
+
+    .index-wrap {
+        @{bg}: url(../images/1.jpg) no-repeat;
+        @{bg}-size: 100%;
+        width: @w[w1];
+        height: 500px;
+        .bdr();
+        .center();
+        padding: 10px;
+        margin-top: 100PX;
+        ul {
+            text-align: center;
+
+            li {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                &:nth-of-type(1) {
+                    width: 80%;
+                    height: 80px;
+                    .center();
+                    .bdr();
+                    font-size: 2em;
+                    font-weight: bolder;
+
+                    a {
+                        width: 80%;
+                        height: 80px;
+                        line-height: 80px;
+                    }
+
+                }
+                &:not(:nth-of-type(1)){
+                    width: 50%;
+                    height: 80px;
+                    .center();
+                    .bdr();
+                    .m(t);
+                    font-weight: bolder;
+                    font-size: 1.5em;
+                    a{
+                        width: 80%;
+                        height: 80px;
+                        line-height: 80px;
+                    }
+                }
+            }
+        }
+    }
+}
